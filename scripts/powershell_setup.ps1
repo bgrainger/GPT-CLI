@@ -20,16 +20,18 @@ param
 
     [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
-    $OpenAIOrganizationId,
-
-    [Parameter(Mandatory = $true)]
-    [ValidateNotNullOrEmpty()]
     $OpenAIEngineId
 )
 
 $plugInScriptPath = Join-Path $RepoRoot -ChildPath "scripts\powershell_plugin.ps1"
-$codexQueryPath = Join-Path $RepoRoot -ChildPath "src\codex_query.py"
-$openAIConfigPath = Join-Path $RepoRoot -ChildPath "src\openaiapirc"
+
+# create .gpt-cli folder in user profile to store data
+$contextFolderPath = Join-Path -Path $env:USERPROFILE -ChildPath '.gpt-cli'
+if (-not (Test-Path -Path $contextFolderPath)) {
+	New-Item -Path $contextFolderPath -ItemType Directory -Force | Out-Null
+}
+
+$openAIConfigPath = Join-Path -Path $contextFolderPath -ChildPath 'openaiapirc'
 
 # The major version of PowerShell
 $PSMajorVersion = $PSVersionTable.PSVersion.Major
@@ -47,20 +49,16 @@ Write-Host "Checking OpenAI access..."
 $enginesApiUri = "https://api.openai.com/v1/engines"
 $response = $null
 try {
-    if ($PSMajorVersion -lt 7) {
-        $response = (Invoke-WebRequest -Uri $enginesApiUri -Headers @{"Authorization" = "Bearer $openAIApiKeyPlainText"; "OpenAI-Organization" = "$OpenAIOrganizationId"})
-    } else {
-        $response = (Invoke-WebRequest -Uri $enginesApiUri -Authentication Bearer -Token $OpenAIApiKey -Headers @{"OpenAI-Organization" = "$OpenAIOrganizationId"})
-    }
+	$response = (Invoke-WebRequest -Uri $enginesApiUri -Authentication Bearer -Token $OpenAIApiKey)
 } catch {
     $statusCode = $_.Exception.Response.StatusCode.value__
-    Write-Error "Failed to access OpenAI api [$statusCode]. Please check your OpenAI API key (https://beta.openai.com/account/api-keys) and Organization ID (https://beta.openai.com/account/org-settings)."
+    Write-Error "Failed to access OpenAI api [$statusCode]. Please check your OpenAI API key (https://platform.openai.com/account/api-keys)."
     exit 1
 }
 
 # Check if target engine is available to the user
 if ($null -eq (($response.Content | ConvertFrom-Json).data | Where-Object {$_.id -eq $OpenAIEngineId})) {
-    Write-Error "Cannot find OpenAI engine: $OpenAIEngineId. Please check the OpenAI engine id (https://beta.openai.com/docs/engines/codex-series-private-beta) and your Organization ID (https://beta.openai.com/account/org-settings)."
+    Write-Error "Cannot find OpenAI engine: $OpenAIEngineId. Please check the OpenAI engine id (https://platform.openai.com/docs/models/model-endpoint-compatibility)."
     exit 1
 }
 
@@ -79,7 +77,7 @@ if (!(Test-Path -Path $PROFILE)) {
 # 1. Read the plugin script content,
 # 2. Replace hardcode variable with the actual path to codex_query.py, 
 # 3. Add the plugin script to the content of PowerShell profile.
-(Get-Content -Path $plugInScriptPath) -replace "{{codex_query_path}}", $codexQueryPath | Add-Content -Path $PROFILE
+(Get-Content -Path $plugInScriptPath) | Add-Content -Path $PROFILE
 Write-Host "Added plugin setup to $PROFILE."
 
 # Create OpenAI configuration file to store secrets
@@ -88,7 +86,6 @@ if (!(Test-Path -Path $openAIConfigPath)) {
 }
 
 Set-Content -Path $openAIConfigPath "[openai]
-organization_id=$OpenAIOrganizationId
 secret_key=$openAIApiKeyPlainText
 engine=$OpenAIEngineId"
 Write-Host "Updated OpenAI configuration file with secrets."
