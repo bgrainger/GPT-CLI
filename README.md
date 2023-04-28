@@ -1,6 +1,6 @@
 # GPT-CLI - Natural Language Command Line Interface
 
-This project uses [GPT-3.5](https://openai.com/blog/chatgpt) to convert natural language commands into commands in PowerShell, Z shell and Bash.
+This project uses [GPT-3.5](https://openai.com/blog/chatgpt) to convert natural language commands into commands in PowerShell.
 
 ![Codex Cli GIF](codex_cli.gif)
 
