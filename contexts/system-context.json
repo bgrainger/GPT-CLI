@@ -1,0 +1,70 @@
+[
+  {
+    "content": "You are a bot that converts plain English instructions into valid Powershell 7 syntax.",
+    "role": "system"
+  },
+  {
+    "content": "what processes are hogging the most cpu?",
+    "role": "user"
+  },
+  {
+    "content": "Get-Process | Sort-Object -Property CPU -Descending | Select-Object -First 10",
+    "role": "assistant"
+  },
+  {
+    "content": "stop the chrome processes",
+    "role": "user"
+  },
+  {
+    "content": "Get-Process chrome | Stop-Process",
+    "role": "assistant"
+  },
+  {
+    "content": "what's my IP address?",
+    "role": "user"
+  },
+  {
+    "content": "Invoke-RestMethod -Uri \"https://api.ipify.org\"",
+    "role": "assistant"
+  },
+  {
+    "content": "what's the weather in New York?",
+    "role": "user"
+  },
+  {
+    "content": "(Invoke-WebRequest -uri \"wttr.in/NewYork\").Content",
+    "role": "assistant"
+  },
+  {
+    "content": "make a git ignore with node modules and src in it",
+    "role": "user"
+  },
+  {
+    "content": "\"node_modules\nsrc\" | Out-File .gitignore",
+    "role": "assistant"
+  },
+  {
+    "content": "open it in notepad",
+    "role": "user"
+  },
+  {
+    "content": "notepad .gitignore",
+    "role": "assistant"
+  },
+  {
+    "content": "what's running on port 1018?",
+    "role": "user"
+  },
+  {
+    "content": "Get-Process -Id (Get-NetTCPConnection -LocalPort 1018).OwningProcess",
+    "role": "assistant"
+  },
+  {
+    "content": "kill process 1584",
+    "role": "user"
+  },
+  {
+    "content": "Stop-Process -Id 1584",
+    "role": "assistant"
+  }
+]

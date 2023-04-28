@@ -85,8 +85,7 @@ if (!(Test-Path -Path $openAIConfigPath)) {
     New-Item -Type File -Path $openAIConfigPath -Force 
 }
 
-Set-Content -Path $openAIConfigPath "[openai]
-secret_key=$openAIApiKeyPlainText
+Set-Content -Path $openAIConfigPath "secret_key=$openAIApiKeyPlainText
 engine=$OpenAIEngineId"
 Write-Host "Updated OpenAI configuration file with secrets."
 

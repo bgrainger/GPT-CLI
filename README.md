@@ -102,5 +102,5 @@ curl https://api.openai.com/v1/engines -H 'Authorization: Bearer YOUR_API_KEY'
 
     PowerShell v7
     ```powershell
-    (Invoke-WebRequest -Uri https://api.openai.com/v1/engines -Authentication Bearer -Token (ConvertTo-SecureString "YOUR_API_KEY" -AsPlainText -Force)).Content
+    (Invoke-WebRequest -Uri https://api.openai.com/v1/engines -Authentication Bearer -Token (ConvertTo-SecureString "YOUR_API_KEY" -AsPlainText)).Content
     ```
