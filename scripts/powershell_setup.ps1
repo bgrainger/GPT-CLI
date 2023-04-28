@@ -89,4 +89,9 @@ Set-Content -Path $openAIConfigPath "secret_key=$openAIApiKeyPlainText
 engine=$OpenAIEngineId"
 Write-Host "Updated OpenAI configuration file with secrets."
 
+$systemContextPath = Join-Path -Path $contextFolderPath -ChildPath 'system-context.json'
+if (!(Test-Path -Path $systemContextPath)) {
+	Copy-Item -Path '.\contexts\system-context.json' -Destination $systemContextPath
+}
+
 Write-Host -ForegroundColor Blue "Codex CLI PowerShell (v$PSMajorVersion) setup completed. Please open a new PowerShell session, type in # followed by your natural language command and hit Ctrl+G!"
