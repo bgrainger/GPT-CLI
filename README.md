@@ -1,5 +1,14 @@
 # GPT-CLI - Natural Language Command Line Interface
 
+## History
+
+This project is inspired by [Copilot for CLI](https://githubnext.com/projects/copilot-cli/) and [Codex-CLI](https://github.com/microsoft/Codex-CLI).
+It is a fork of the latter that is updated to use the latest OpenAI API and is a native PowerShell plugin (that has dropped support for other shells).
+
+For an update to Codex-CLI, see one of its recently-updated forks, such as [AntonOsika](https://github.com/AntonOsika/CLI-Co-Pilot) or [Lukas-LLS](https://github.com/Lukas-LLS/Codex-CLI).
+
+## About
+
 This project uses [GPT-3.5](https://openai.com/blog/chatgpt) to convert natural language commands into commands in PowerShell.
 
 ![Codex Cli GIF](codex_cli.gif)
